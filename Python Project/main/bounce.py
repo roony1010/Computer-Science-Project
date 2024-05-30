@@ -12,7 +12,7 @@ timer = pygame.time.Clock()
 # game variables
 wall_thickness = 10
 gravity = 0.5
-bounce_stop = 0.3
+stop = 0.3
 # track positions of mouse to get movement vector
 mouse_trajectory = []
 
@@ -35,19 +35,19 @@ class Ball:
     def draw(self):
         screen.blit(self.image, self.rect)
 
-    def check_gravity(self):
+    def motion(self):
         if not self.selected:
             if self.y_pos < h - self.radius - (wall_thickness / 2):
                 self.y_speed += gravity
             if (self.y_pos < self.radius + (wall_thickness/2) and self.y_speed < 0) or \
                     (self.y_pos > h - self.radius - (wall_thickness/2) and self.y_speed > 0):
                 self.y_speed *= -1 * self.retention
-                if abs(self.y_speed) < bounce_stop:
+                if abs(self.y_speed) < stop:
                     self.y_speed = 0
             if (self.x_pos < self.radius + (wall_thickness/2) and self.x_speed < 0) or \
                     (self.x_pos > w - self.radius - (wall_thickness/2) and self.x_speed > 0):
                 self.x_speed *= -1 * self.retention
-                if abs(self.x_speed) < bounce_stop:
+                if abs(self.x_speed) < stop:
                     self.x_speed = 0
             if self.y_speed == 0 and self.x_speed != 0:
                 if self.x_speed > 0:
@@ -116,7 +116,7 @@ while run:
     for ball in balls:
         ball.draw()
         ball.update_pos(mouse_coords)
-        ball.y_speed = ball.check_gravity()
+        ball.y_speed = ball.motion()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
